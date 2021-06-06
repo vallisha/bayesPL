@@ -1,0 +1,24 @@
+{
+    "id": "0986EB98",
+    "path": "~/Downloads/bayesPL/tests/testthat.R",
+    "project_path": "tests/testthat.R",
+    "type": "r_source",
+    "hash": "3885236020",
+    "contents": "",
+    "dirty": false,
+    "created": 1620243318366.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1612936386,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1612936386,
+    "read_only": false,
+    "read_only_alternatives": []
+}

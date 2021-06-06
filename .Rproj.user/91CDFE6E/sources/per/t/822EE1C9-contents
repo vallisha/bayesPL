@@ -1,0 +1,39 @@
+Package: bayesPL
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Authors@R: c(
+    person(given = "Your name",
+           family = "Your names",
+           role = c("aut", "cre"),
+           email = "your@email.com")
+           )
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Biarch: true
+Depends: 
+    R (>= 4.0.0)
+Imports:
+    dplyr,
+    tidyr,
+    stringr,
+    ggplot2,
+    cmdstanr,
+    posterior
+SystemRequirements: GNU make
+Remotes: 
+    stan-dev/posterior,
+    stan-dev/cmdstanr
+Suggests: 
+    rmarkdown,
+    testthat,
+    shinystan,
+    rstan (>= 2.20.0),
+    bayesplot,
+    kableExtra
+VignetteBuilder: knitr

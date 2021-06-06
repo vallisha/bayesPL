@@ -1,0 +1,25 @@
+#' bpl function
+#'
+#' @param data input data frame with column y
+#' @export
+#'
+#' @examples
+bpl <- function(data){
+
+  standata = list(y = data$y,
+                  N = nrow(data))
+
+  model_file <-
+    system.file("stan",
+                "test.stan",
+                package = "bayesPL",
+                mustWork = TRUE)
+  model <- cmdstanr::cmdstan_model(model_file)
+  fit <- model$sample(data=standata,
+                      chains=4,
+                      iter=2000,
+                      iter_warmup=500)
+  draws<-fit$draws()
+  diagnostics<-fit$sampler_diagnostics()
+  print(fit)
+}

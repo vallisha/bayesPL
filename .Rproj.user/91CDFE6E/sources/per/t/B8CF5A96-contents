@@ -1,0 +1,5 @@
+test_that("simple test", {
+  d <- data.frame(y=rnorm(10, 1, 1))
+  bpl(data = d)
+  #if it works it should not assert any error
+})
