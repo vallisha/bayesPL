@@ -4,6 +4,7 @@
 #' @export
 #'
 #' @examples
+#'
 bpl <- function(x.matrix,  min=TRUE, prior=rep(1, ncol(x.matrix)),
                 nsim=2000, nchains=8,
                 seed=123, ...){
@@ -54,37 +55,51 @@ bpl <- function(x.matrix,  min=TRUE, prior=rep(1, ncol(x.matrix)),
   fit <- model$sample(data=data,
                       chains=nchains,
                       iter=nsim,
-                      iter_warmup=500,
+                      iter_warmup=1000,
                       seed=seed)
 
+
   # this is a draws to extract posterior
-  draws <- fit$draws()
+  ratings_matrix <- fit$draws("ratings")
+  print(ratings_matrix)
+
   # convert to matrix
   posterior <- posterior::as_draws_matrix(fit$draws("ratings"))
+
   #print summary of the model
-  print(fit$summary(NULL, c("mean","median","sd","mad")))
+  print(fit$summary())
+
+
+
+  #print(fit$summary(NULL, c("mean","median","sd","mad")))
 
   colnames(posterior) <- colnames(ranking.matrix)
 
   #apply() takes matrix as an input and gives output in vector, list or array.
   posterior.calculator <- t(apply(posterior, MARGIN=1,
                             FUN=function(i) {
-                              return(rank(-i))
-                            }))
+                              return (rank(-i))
+                            }
+  ))
+
   #Computation of rank based on the mean of the posterior.
   mean.rank <- colMeans(posterior.calculator)
+
+  coltest <- mean.rank/sum(mean.rank)
+  #print(coltest)
   names(mean.rank) <- colnames(ranking.matrix)
 
   #Computation of rank based on the median of the posterior.
-  median.rank <- apply(posterior, MARGIN = 2, median)
-  names(median.rank) <- colnames(ranking.matrix)
+  #median.rank <- apply(posterior, MARGIN = 2, median)
+  #names(median.rank) <- colnames(ranking.matrix)
 
   #Computation of rank based on the SD of the posterior.
-  sd.rank <- GMCM:::colSds(posterior)
-  names(sd.rank) <- colnames(ranking.matrix)
+  #sd.rank <- GMCM:::colSds(posterior)
+  #names(sd.rank) <- colnames(ranking.matrix)
 
 
   parameters <- list(prior=prior, nchains=nchains, nsim=nsim)
+
 
   #Printing the results
   results <- list()
@@ -93,13 +108,26 @@ bpl <- function(x.matrix,  min=TRUE, prior=rep(1, ncol(x.matrix)),
   results$posterior.weights       <- posterior
   results$title.mean.rank         <- "Rank based on mean of the posterior"
   results$mean.rank               <- mean.rank
-  results$title.median.rank       <- "Rank based on median of the posterior"
-  results$median.rank             <- median.rank
-  results$title.sd.rank         <- "Rank based on SD of the posterior"
-  results$sd.rank               <- sd.rank
-  results$additional              <- draws
+  results$title.mean.rank.one     <- "Rank based on mean of the posterior confined to one"
+  results$coltest                 <- coltest
+  #results$title.median.rank       <- "Rank based on median of the posterior"
+  #results$median.rank             <- median.rank
+  #results$title.sd.rank         <- "Rank based on SD of the posterior"
+  #results$sd.rank               <- sd.rank
+  #results$additional              <- draws
 
   print(results)
+  return(posterior)
 
+}
+
+plot_graph <- function(posterior, columns) {
+  orange_scheme <- c("#ffebcc", "#ffcc80",
+                     "#ffad33", "#e68a00",
+                     "#995c00", "#663d00")
+  color_scheme_set(orange_scheme)
+  color_scheme_view()
+  transformation_function <- function(x) min(colMeans(posterior)) + max(colMeans(posterior)) - x
+  mcmc_areas(posterior, pars=c(columns), transformations=transformation_function) + scale_y_discrete(labels=c(columns))
 }
 

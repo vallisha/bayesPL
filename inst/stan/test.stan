@@ -21,14 +21,13 @@ data {
     vector[m] alpha;
 }
 
-
 transformed data {
   // The implementation of the probability of the PL model uses the order, rather
   // than the rank
   int order [n,m];
-  for (s in 1:n){
-    for (i in 1:m){
-      order[s, ranks[s, i]]=i;
+  for (i in 1:n){
+    for (j in 1:m){
+      order[i, ranks[i, j]]=j;
     }
   }
 }
@@ -40,23 +39,23 @@ parameters {
 }
 
 transformed parameters{
-  real loglik;
+  real loglikelihood;
   real rest;
 
-  loglik=0;
-  for (s in 1:n){
-    for (i in 1:(m-1)){
+  loglikelihood=0;
+  for (i in 1:n){
+    for (j in 1:(m-1)){
       rest=0;
-      for (j in i:m){
-        rest = rest + ratings[order[s, j]];
+      for (x in j:m){
+        rest = rest + ratings[order[i, x]];
       }
-      loglik = loglik + log(weights[s] * ratings[order[s, i]] / rest);
+      loglikelihood = loglikelihood + log(weights[i] * ratings[order[i, j]] / rest);
     }
   }
 }
 
 model {
     ratings ~ dirichlet(alpha); // Dirichlet prior
-    target += loglik;
+    target += loglikelihood;
 }
 

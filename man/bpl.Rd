@@ -4,11 +4,22 @@
 \alias{bpl}
 \title{bpl function}
 \usage{
-bpl(data)
+bpl(
+  x.matrix,
+  min = TRUE,
+  prior = rep(1, ncol(x.matrix)),
+  nsim = 2000,
+  nchains = 8,
+  seed = 123,
+  ...
+)
 }
 \arguments{
 \item{data}{input data frame with column y}
 }
 \description{
 bpl function
+}
+\examples{
+
 }
